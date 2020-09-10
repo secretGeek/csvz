@@ -1,4 +1,4 @@
-﻿# csvz
+# csvz
 
 `csvz` is the hot new open database standard that is taking the entire technological world by storm.
 
