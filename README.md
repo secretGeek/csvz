@@ -38,7 +38,7 @@ A csvz file is compliant with `csvz-0` if it is literally just a bunch of `csv` 
 
 The `csv` files themselves should comply with [`RFC 4180`](https://github.com/secretGeek/AwesomeCSV#standards).
 
-(Anywhere that this spec refers to "a csv file" it means a file that complies with `RFC 4180`.) (at the very least).
+(Anywhere that this spec refers to "a csv file" it means a file that complies with `RFC 4180`.) (at the very least... other more specific csv format details will be covered in a later spec fragment).
 
 (Anywhere that `the csvz specification` refers to "this spec" it means `the csvz specification`.)
 
@@ -60,15 +60,19 @@ The file `tables.csv` meets the following description:
 - Each data row describes a different csv file within this `csvz` file
 - The columns must include a column called "filename"
 - There may be more columns. Some suggestions (not required for this specification)
-  - `Bytes` - the size of the file in bytes
-  - `Rows` - the number of rows in the file
-  - `Columns` - the number of columns in the file
-  - `Description` - a description of the file
-  - `Published` - the date the data in the file was first published
-  - `Source` - information about the source of the data in the file
+  - `bytes` - the size of the file in bytes
+  - `rows` - the number of rows in the file
+  - `columns` - the number of columns in the file
+  - `description` - a description of the file
+  - `published` - the date the data in the file was first published
+  - `source` - information about the source of the data in the file
+  - `has-column-names` - a `true/false` value indicating if the file has a header row containing column names.
+  - `skip-rows` - How many rows need to be skipped, before the data begins? (Rarely need to specify this, but when you need it, you need it!)
 - The file `tables.csv` may also describe itself. See [Russell](http://wiki.secretgeek.net/paradox#bertrand-russell-making-life-impossible-for-frege-since-1902).
 
 (The word "must" is used for parts of the specification that are required for a file or tool to claim compliance with the standards described in this spec. The word "may" is used for parts which are not required; Optional sections may be covered in more detail, as required elements in a subsequent fragment of this spec.)
+
+(`help-wanted` the method of encoding `true/false` values is not currently defined.)
 
 -----
 
@@ -86,13 +90,14 @@ The file `columns.csv` meets the following description:
 - It is expected that the columns "filename" and "column" are unique.
   - If the columns "filename" and "column" are not unique, then any meta data about that file may not be correctly interpreted. This may cause difficulties
 - There should be more columns than just the "filename" and "column" column. Some suggestions:
-  - `type` - the type of the column. (Types are not described in this spec fragment)
+  - `data-type` - the type of the column. (Data-types are not described in this spec fragment, and will be covered in later spec fragments.)
   - `nullable` - a value indicating if the column can be null
-  - `max-length` - a nullable column, that describes the maximum length of the column, in cases where the type supports a maximum length
+  - `max-length` - a nullable column, that describes the maximum length of the column, in cases where the data-type supports a maximum length
   - `unique` - a true/false value indicating if the values in the column should be unique
   - `primary-key` - a true/false value indicating if the column can serve as (part or whole of) the primary key of the table.
   - `description` - a description of the column
   - `units` - a nullable name description of the unit of measure
+  - `ordinal` - the order in which the columns have been written to the file. In cases where there is no header row, or where columns are re-ordered, this can be helpful.
   - `published` - the date the data in the file was first published
   - `source` - information about the source of the data in the file
 
@@ -127,6 +132,7 @@ For example:
   - What quoting is used, e..g single/double/mixed/other?
   - Are delimiters doubled or escaped? (if escaped, escaped with what?)
   - The spec can also cover what defaults are sensible for each of these things
+  - how are `nulls` represented? e.g. the literal string `null` with no quotes? or `NULL`, or `nil`? Or are empty strings, unquoted, to be treated as NULLs?
 - `indexes` - what indexes can/should be built on the tables (if the data)
 - `data-types` - what types are used, how are they encoded (e.g. dates: how? binary data base-64 encoded? etc), what ranges exist for numbers etc.
 - `user-defined-types` - how can types be extended?
@@ -163,6 +169,9 @@ If you are aware of one, or you have created one (hint hint), a pull request is 
 ## Contribute
 
 To experience the fun of contributing, see [Contributing](contributing.md)
+
+Contributors definitely includes people who raise issues. **Raising issues is the quickest way to contribute.** Also look for issues marked `good first issue` or `help wanted`
+
 
 ## License
 
