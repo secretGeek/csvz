@@ -22,6 +22,8 @@ A `csvz` file is literally just a bunch of `csv` files, in a zip file, that has 
 - [Contribute](#contribute)
 - [License](#license)
 
+-----
+
 ## The csvz specification
 
 The `csvz` specification is broken into meaningful fragments.
@@ -36,7 +38,9 @@ They can also indicate other fragments of the specification that they have imple
 
 A csvz file is compliant with `csvz-0` if it is literally just a bunch of `csv` files, in a zip file, that has been renamed to have a ".csvz" file extension.
 
-The `csv` files themselves should comply with [`RFC 4180`](https://github.com/secretGeek/AwesomeCSV#standards).
+(Note that each fragment has a fragment identifier written at the beginning of the fragment. For example this is `csvz-0` and the next fragment is `csvz-meta-tables`. Fragments are optional, but it is good to know which fragments you do or do not comply with.)
+
+The `csv` files themselves *should* comply with [`RFC 4180`](https://github.com/secretGeek/AwesomeCSV#standards).
 
 (Anywhere that this spec refers to "a csv file" it means a file that complies with `RFC 4180`.) (at the very least... other more specific csv format details will be covered in a later spec fragment).
 
@@ -47,6 +51,8 @@ The `csv` files themselves should comply with [`RFC 4180`](https://github.com/se
 ### **`csvz-meta-tables`** A `csvz` file can contain a file called `tables.csv` describing the contents of the file
 
 Metadata about the contents of the csvz file is contained in a directory called "_meta". The file `tables.csv`, if present, is inside this directory.
+
+(Assume that the csvz reserves the right to create other .csv files under the _meta folder, and to create more folders under it. Details appear in subsequent spec fragments.)
 
 The file `tables.csv` contains metadata about all of the csv files included in the `csvz` file.
 
@@ -120,23 +126,60 @@ The file `relationships.csv` meets the following description:
 - There may also be a column called "key-name". In the case of a composite keys, there would be multiple rows with the same "key-name".
 - There should be more columns to describe the relationships. It's late at night here. I have chores to do. The woods are lovely dark and deep.
 
+-----
+
+### `csvz-meta-csv` (DRAFT) A csvz file can contain a file called `csv.csv`
+
+Metadata about the rules of the csvz file are contained in a directory called "_meta". The file `csv.csv`, if present, is inside this directory.
+
+The file `csv.csv` contains metadata about how the csv files in this `csvz` file are formatted, from a general csv standards point of view.
+
+Later spec fragments will give exact definitions for the expected columns and supported columns, their possible values and the meanings of those values.
+
+But to comply with `csvz-meta-csv` the file `csv.csv` must:
+
+- Have a header row naming the columns in this file
+- Data rows, each of which describes a different and very specific but fundamental aspect of the csv format used by all other csv files in this csvz file.
+- TODO: Open question: what format must this csvz file be written in?
+  - e.g. perhaps `csv.csv` should simply eb comma separated, with LF for rows, double-quotes to qualify any content that contains a separator or qualify, and doubling for embedded qualifiers.
+  - Or... more creative... could a "simple" heuristic be used to determine line and row feed?
+    - for example if we know in advance that the first row is:
+
+        ' "aspect" `field-delim` "value" `field-delim` "comments" `row-delim` '
+
+    ....then we can infer those already, for this file at least. And that is enough to go on to define the rest of the aspects. )
+- Suggested aspects that can be described (this spec fragment deliberately contains no specifics as to *how* these things are described):
+  - encoding - what file encoding is used for the csv files (utf-x, BOM, etc.)
+  - field separators - examples comma, tab, semicolon, space, various emoji
+  - row separators - examples CRLF, LF, CR, semicolon, exclamation point, backtick
+  - qualifiers - what qualifiers (if any) are used for embedding delimiters. perhaps qualifiers are not used.
+  - What quoting is used, e.g. single/double/mixed/other?
+  - escaping - Are qualifiers doubled or escaped? (If escaped, escaped with what?)
+  - nulls... how are `nulls` represented? e.g. the literal string `null` with no quotes? or `NULL`, or `nil`? Or are empty strings, unquoted, to be treated as NULLs?
+  - user defined data types are proposed to be handled elsewhere. but possibly some extremely common fundamental data types could be most expediently described in csv.csv, such as:
+    - date formats - hint... iso 8601
+    - time zone information
+    - boolean formats
+    - binary data (hint: base 64 coded)
+    - integer ranges.
+    - floats
+- todo: Later spec fragments may further describe "sensible defaults" for these things
+- todo: Later spec fragments may describe heuristics for detecting delimiters/qualifiers/quoting and escaping rules, etc.
+
+-----
+
 ### Unwritten meta fragments
 
 More `meta-*` spec fragments may be needed to describe other meta files.
 
 For example:
 
-- `csv`:
-  - what file encoding is used for the csv files (utf-x, BOM, etc.)
-  - what separators/qualifiers are used? e.g. what field/row separators?
-  - What quoting is used, e..g single/double/mixed/other?
-  - Are delimiters doubled or escaped? (if escaped, escaped with what?)
-  - The spec can also cover what defaults are sensible for each of these things
-  - how are `nulls` represented? e.g. the literal string `null` with no quotes? or `NULL`, or `nil`? Or are empty strings, unquoted, to be treated as NULLs?
 - `indexes` - what indexes can/should be built on the tables (if the data)
 - `data-types` - what types are used, how are they encoded (e.g. dates: how? binary data base-64 encoded? etc), what ranges exist for numbers etc.
 - `user-defined-types` - how can types be extended?
-- `schemas` - consider situations where directories are used to describe separate schemas (or other namespacing concepts)
+- `schemas` - consider situations where directories are used to describe separate schemas\databases (or other namespacing concepts)
+- `directories` - instead of defining schemas (or other namespaces) perhaps the concept of directories could be directly described, a kind of set of routing rules/conventions. in the directories.csv you might in effect say, the directories in the root directory (other than _meta) are to be treated as "server" names. the next level are to be treated as "share" names... or perhaps you will say, "under "/databases" the directory names in there are treated as "database" names, and the names under that are "schema" names.
+- `naming` - perhaps you will define naming conventions, e.g. ways to pull data from names, or use names to know which files can be combined into one logical unit later.
 - `deltas` - csv files may hold operations on data, instead of data itself, i.e. details of insert,update,delete,(upsert) operations
 - `constraints` - what other constraints exist on the data
 - `partitions` - consider situations where a single table is split across multiple files, and or a `csvz` itself is split amongst multiple files, including
@@ -158,6 +201,7 @@ The following tools and libraries are able to read, write or process `.csvz` fil
 |           |            | - Exports a `PostgreSQL` database into a new `.csvx` file                                            |
 |           |            | - Save a JSON file as a series of csv files and _meta files (ready for zipping)                      |
 |           |            | - Load some or all of an unzipped csvz as a single json object (limited filtering ability)           |
+|           |            | - Validates which spec fragments a `csvz` file complies with                                         |
 |           |            | - (More tools...)                                                                                    |
 
 Note that there are currently no `csvz` compliant tools or libraries listed in this table.
@@ -172,6 +216,7 @@ To experience the fun of contributing, see [Contributing](contributing.md)
 
 Contributors definitely includes people who raise issues. **Raising issues is the quickest way to contribute.** Also look for issues marked `good first issue` or `help wanted`
 
+A community forum for discussion/ideas for implementors and tool builders is much needed, following [issue #14](https://github.com/secretGeek/csvz/issues/14) to find where the community will be built.
 
 ## License
 
