@@ -96,7 +96,7 @@ The file `columns.csv` meets the following description:
   - `published` - the date the data in the file was first published
   - `source` - information about the source of the data in the file
 
-(The word "should" is used for parts of the specification that are not required, but which will lead to difficulty for users of the data or the tools if they are not commplied with.)
+(The word "should" is used for parts of the specification that are not required, but which will lead to difficulty for users of the data or the tools if they are not complied with.)
 
 -----
 
