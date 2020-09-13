@@ -16,7 +16,7 @@ A `csvz` file is literally just a bunch of `csv` files, in a zip file, that has 
   - [`csvz-0` A csvz file is literally just a bunch of `csv` files, in a zip file with a file name that ends with ".csvz"](#csvz-0-a-csvz-file-is-literally-just-a-bunch-of-csv-files-in-a-zip-file-with-a-file-name-that-ends-with-csvz)
   - [`csvz-meta-tables` A csvz file can contain a file called `tables.csv` describing the contents of the file](#csvz-meta-tables-a-csvz-file-can-contain-a-file-called-tablescsv-describing-the-contents-of-the-file)
   - [`csvz-meta-columns` A csvz file can contain a file called `columns.csv`](#csvz-meta-columns-a-csvz-file-can-contain-a-file-called-columnscsv)
-  - [`csvz-meta-relations` A csvz file can contain a file called `relationships.csv`](#csvz-meta-relations-a-csvz-file-can-contain-a-file-called-relationshipscsv)
+  - [`csvz-meta-relations` A csvz file can contain a file called `relations.csv`](#csvz-meta-relations-a-csvz-file-can-contain-a-file-called-relationscsv)
   - [`csvz-meta-csv` A csvz file can contain a file called `csv.csv`](#csvz-meta-csv-A-csvz-file-can-contain-a-file-called-csvcsv)
   - [`csvz-meta-per-file` The ability to include individual meta-files per csv file](#csvz-meta-per-file-the-ability-to-include-individual-meta-files-per-csv-file)
   - [Suggested specification fragments](#suggested-specification-fragments)
@@ -32,7 +32,7 @@ The `csvz` specification is broken into meaningful fragments.
 
 Files can call themselves `csvz-compliant` if they only comply with the first fragment of the specification, [`csvz-0`](#csvz-0-a-csvz-file-is-literally-just-a-bunch-of-csv-files-in-a-zip-file-with-a-file-name-that-ends-with-csvz).
 
-They can also indicate other fragments of the specification that they have implemented, such as [`csvz-meta-tables`](#csvz-meta-tables-a-csvz-file-can-contain-a-file-called-tablescsv-describing-the-contents-of-the-file), [`csv-meta-relations`](#csvz-meta-relations-a-csvz-file-can-contain-a-file-called-relationships.csv) etc.
+They can also indicate other fragments of the specification that they have implemented, such as [`csvz-meta-tables`](#csvz-meta-tables-a-csvz-file-can-contain-a-file-called-tablescsv-describing-the-contents-of-the-file), [`csv-meta-relations`](#csvz-meta-relations-a-csvz-file-can-contain-a-file-called-relations.csv) etc.
 
 -----
 
@@ -117,20 +117,20 @@ The file `columns.csv` meets the following description:
 
 -----
 
-### `csvz-meta-relations` A csvz file can contain a file called `relationships.csv`
+### `csvz-meta-relations` A csvz file can contain a file called `relations.csv`
 
-Metadata about the contents of the csvz file is contained in a directory called "_meta". The file `relationships.csv`, if present, is inside this directory.
+Metadata about the contents of the csvz file is contained in a directory called "_meta". The file `relations.csv`, if present, is inside this directory.
 
-The file `relationships.csv` contains metadata about all of the relationships between any of the columns in any of the files in the `csvz` file.
+The file `relations.csv` contains metadata about all of the relationships between any of the columns in any of the files in the `csvz` file.
 
-The file `relationships.csv` meets the following description:
+The file `relations.csv` meets the following description:
 
 - There is a header row naming the columns in this file
 - Each data row describes a different foreign key relationship within the `csvz` file.
 - The columns must include these columns:
   - called "table", "key-column", "foreign-table","foreign-key-column"
 - There may also be a column called "key-name". In the case of a composite keys, there would be multiple rows with the same "key-name".
-- There should be more columns to describe the relationships. It's late at night here. I have chores to do. The woods are lovely dark and deep.
+- todo: There may be more columns needed to describe the relationships.
 
 -----
 
