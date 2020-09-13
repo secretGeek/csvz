@@ -42,9 +42,9 @@ A csvz file is compliant with `csvz-0` if it is literally just a bunch of `csv` 
 
 (Note that each fragment has a fragment identifier written at the beginning of the fragment. For example this is `csvz-0` and the next fragment is `csvz-meta-tables`. Fragments are optional, but it is good to know which fragments you do or do not comply with.)
 
-The `csv` files themselves should be parseable with most csv reading software. They may comply with [`RFC 4180`](https://github.com/secretGeek/AwesomeCSV#standards).
+The `csv` files themselves should be parseable with most csv reading software.
 
-(Anywhere that this spec refers to "a csv file" it means a file that complies with `RFC 4180` (todo: find a variant of 4180 that gives a sensible definition with options for text encoding, for delimiters, qualifiers, escaping.).)
+(Anywhere that this spec refers to "a csv file" it means a file that complies with [`RFC 4180`](http://www.faqs.org/rfcs/rfc4180.html) or a compatible [dialect](https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions) as described by the [CSV on the Web Working Group](http://www.w3.org/2013/csvw/), unless a stricter definition is explicitly given.)
 
 (Anywhere that `the csvz specification` refers to "this spec" it means `the csvz specification`.)
 
@@ -75,9 +75,9 @@ The file `tables.csv` meets the following description:
   - `description` - a description of the file
   - `published` - the date the data in the file was first published
   - `source` - information about the source of the data in the file
-  - `has-column-names` - a `true/false` value indicating if the file has a header row containing column names.
+  - `has-column-names` - a `true/false` value indicating if the file has a header row containing column names
   - `skip-rows` - How many rows need to be skipped, before the data begins? (Rarely need to specify this, but when you need it, you need it!)
-  - (todo: where information in table.csv conflicts with information in `csv.csv`, then `table.csv` has precedence over csv.csv, for the file it describes. For example csv.csv may indicate that all files have header rows, but a specific file may not, and this would be indicated in `tables.csv`)
+  - (todo: where information in table.csv conflicts with information in `csv.csv`, then `tables.csv` has precedence over `csv.csv`, for the file it describes. For example `csv.csv` may indicate that all files have header rows, but a specific file may not, and this would be indicated in `tables.csv`)
 - The file `tables.csv` may also describe itself. See [Russell](http://wiki.secretgeek.net/paradox#bertrand-russell-making-life-impossible-for-frege-since-1902). Note that `bytes` (for example) might cause a paradox.
 
 (The word "must" is used for parts of the specification that are required for a file or tool to claim compliance with the standards described in this spec. The word "may" is used for parts which are not required; Optional sections may be covered in more detail, as required elements in a subsequent fragment of this spec.)
@@ -163,8 +163,11 @@ But to comply with `csvz-meta-csv` the file `csv.csv` must:
     - binary data (hint: base 64 coded)
     - integer ranges.
     - floats
-- todo: Later spec fragments may further describe "sensible defaults" for these things
-- todo: Later spec fragments may describe "sensible heuristics" for detecting delimiters/qualifiers/quoting and escaping rules, etc.
+- Later spec fragments may further describe "sensible defaults" for these things
+- Later spec fragments may describe "sensible heuristics" for detecting delimiters/qualifiers/quoting and escaping rules, etc.
+
+
+(todo: See also [csvw dialect descriptions](https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions))
 
 -----
 
