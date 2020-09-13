@@ -215,26 +215,25 @@ For example:
 
 The following tools and libraries are able to read, write or process `.csvz` files.
 
-| Tool      | Actions | Description                                                                                          |
-|-----------|------------|------------------------------------------------------------------------------------------------------|
-|[Sylvan.Data.CsvZip](https://github.com/MarkPflug/Sylvan.Data.CsvZip) | Create / Read | library for programatically creating and reading .csvz files |
-|[Sylvan.Tools.CsvZip](https://github.com/MarkPflug/Sylvan.Data.CsvZip#sylvantoolscsvzip-tool) | Create / Read | .NET global tool for creating .csvz files from the commandline |
-|           |            | - Packs a set of csv files into a new csvz file, and generates a `tables.csv` and `columns.csv`   |
-|           |            | - Converts a `.csvz` file into a `.xlsx` file, that can be opened by Excel.                          |
-|           |            | - Converts a `.xlsx` file into a `.csvz` file (note that not all of Excel's features are respected.) |
-|           |            | - Exports a `sqlite` database into a new `.csvz` file                                                |
-|           |            | - Creates a new `sqlite` database from a `.csvz` file                                                |
-|           |            | - Exports a `mysql` database into a new `.csvz` file                                                 |
-|           |            | - Creates a new `PostgreSQL` database from a `.csvz` file                                            |
-|           |            | - Exports a `PostgreSQL` database into a new `.csvz` file                                            |
-|           |            | - Save a JSON file as a series of csv files and _meta files (ready for zipping)                      |
-|           |            | - Load some or all of an unzipped csvz as a single json object (limited filtering ability)           |
-|           |            | - Validates which spec fragments a `csvz` file complies with                                         |
-|           |            | - (More tools...)                                                                                    |
+| Tool      | Actions | Compliance |Description                                                                                          |
+|-----------|---------|------------|-----------------------------------------------------------------------------------------------------|
+|[Sylvan.Data.CsvZip](https://github.com/MarkPflug/Sylvan.Data.CsvZip) | Create / Read | `csvz-0` `csvz-meta-tables` `csvz-meta-columns` | Library for programatically creating and reading .csvz files |
+|[Sylvan.Tools.CsvZip](https://github.com/MarkPflug/Sylvan.Data.CsvZip#sylvantoolscsvzip-tool) | Create / Read | `csvz-0` `csvz-meta-tables` `csvz-meta-columns` | .NET global tool for creating .csvz files from the commandline |
+|           |         |            | Packs a set of csv files into a new csvz file, and generates a `tables.csv` and `columns.csv`   |
+|           |         |            | Converts a `.csvz` file into a `.xlsx` file, that can be opened by Excel.                        |
+|           |         |            | Converts a `.csvz` file into a `.xlsx` file, that can be opened by Excel.                          |
+|           |         |            | Converts a `.xlsx` file into a `.csvz` file (note that not all of Excel's features are respected.) |
+|           |         |            | Exports a `sqlite` database into a new `.csvz` file                                                |
+|           |         |            | Creates a new `sqlite` database from a `.csvz` file                                                |
+|           |         |            | Exports a `mysql` database into a new `.csvz` file                                                 |
+|           |         |            | Creates a new `PostgreSQL` database from a `.csvz` file                                            |
+|           |         |            | Exports a `PostgreSQL` database into a new `.csvz` file                                            |
+|           |         |            | Save a JSON file as a series of csv files and _meta files (ready for zipping)                      |
+|           |         |            | Load some or all of an unzipped csvz as a single json object (limited filtering ability)           |
+|           |         |            | Validates which spec fragments a `csvz` file complies with                                         |
+|           |         |            | (More tools...)                                                                                    |
 
-Note that there are currently no `csvz` compliant tools or libraries listed in this table.
-
-If you are aware of one, or you have created one (hint hint), a pull request is welcome. (Contribution notes below.)
+If you know of a `csvz` compliant tool, or you have created one (hint hint), a pull request is welcome.
 
 Suggestion: You can **use existing `csvz` or `csv` libraries** to build a new type of connection (e.g. A tool to create/read csvz files from an Oracle database, using existing libraries, would take some Oracle knowledge, and not much else.)
 
