@@ -18,6 +18,7 @@ A `csvz` file is literally just a bunch of `csv` files, in a zip file, that has 
   - [`csvz-meta-columns` A csvz file can contain a file called `columns.csv`](#csvz-meta-columns-a-csvz-file-can-contain-a-file-called-columnscsv)
   - [`csvz-meta-relations` A csvz file can contain a file called `relationships.csv`](#csvz-meta-relations-a-csvz-file-can-contain-a-file-called-relationshipscsv)
   - [`csvz-meta-csv` A csvz file can contain a file called `csv.csv`](#csvz-meta-csv-A-csvz-file-can-contain-a-file-called-csvcsv)
+  - [`csvz-meta-per-file` The ability to include individual meta-files per csv file](#csvz-meta-per-file-the-ability-to-include-individual-meta-files-per-csv-file)
   - [Suggested specification fragments](#suggested-specification-fragments)
 - [A list of `csvz-compliant` Tools and Libraries](#a-list-of-csvz-compliant-tools-and-libraries)
 - [Contribute](#contribute)
@@ -164,6 +165,32 @@ But to comply with `csvz-meta-csv` the file `csv.csv` must:
     - floats
 - todo: Later spec fragments may further describe "sensible defaults" for these things
 - todo: Later spec fragments may describe "sensible heuristics" for detecting delimiters/qualifiers/quoting and escaping rules, etc.
+
+-----
+
+### `csvz-meta-per-file` The ability to include individual meta-files per csv file
+
+This fragment extends all other `csvz-meta-*` fragments.
+
+Consider an example where a single csv file, `people.csv` inside the csvz follows different standards to the other files.
+
+It's csv conventions could be described in a file: `_meta/csv/people.csv` and those would be taken to override the conventions in `_meta/csv.csv`
+
+Similarly, a file can have its own `_meta/tables/{filename}.csv` file, `_meta/columns/{filename}.csv` and `_meta/relations/{filename}.csv`.
+
+This methods can be assumed to extend for all other `_meta/*.csv` files.
+
+A `per-file` meta file is assumed to have higher **precedence** than the files directly contained in `_meta/*.csv`.
+
+For example: if `_meta/columns.csv` decribed the columns of `states.csv` in one way, but `_meta/columns/states.csv` described those columns in another way, all details for `states.csv` in `_meta/columns.csv` should be ignored, and those in `_meta/columns/states.csv` used instead. (i.e. they are not *combined*).
+
+(Note - combining might be more interesting, useful. Would let you build up/inherit attributes. But would also need a way to "erase" a rule, and I can't think of a way to do that so let's stick with "no combining")
+
+(Suggestion for authors of Tooling that reads these files: they may want to provide optional debug information that describes where meta data was sourced from, highlighting situations where precedence rules needed to be applied.)
+
+You can also mix and match `_meta/*.csv` with `per-file` meta information, without loss of meaning.
+
+For example the table `states.csv` may be described in `_meta/tables.csv` while it's columns may be described in `_meta/columns/states.csv`
 
 -----
 
