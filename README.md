@@ -218,7 +218,7 @@ The following tools and libraries are able to read, write or process `.csvz` fil
 | Tool      | Actions | Compliance |Description                                                                                          |
 |-----------|---------|------------|-----------------------------------------------------------------------------------------------------|
 |[Sylvan.Data.CsvZip](https://github.com/MarkPflug/Sylvan.Data.CsvZip) | Create / Read | `csvz-0` `csvz-meta-tables` `csvz-meta-columns` | Library for programatically creating and reading .csvz files |
-|[Sylvan.Tools.CsvZip](https://github.com/MarkPflug/Sylvan.Data.CsvZip#sylvantoolscsvzip-tool) | Create / Read | `csvz-0` `csvz-meta-tables` `csvz-meta-columns` | .NET global tool for creating .csvz files from the commandline |
+|[Sylvan.Tools.CsvZip](https://github.com/MarkPflug/Sylvan.Data.CsvZip#sylvantoolscsvzip-tool) | Create | `csvz-0` `csvz-meta-tables` `csvz-meta-columns` | .NET global tool for creating .csvz files from the commandline |
 |           |         |            | Packs a set of csv files into a new csvz file, and generates a `tables.csv` and `columns.csv`   |
 |           |         |            | Converts a `.csvz` file into a `.xlsx` file, that can be opened by Excel.                        |
 |           |         |            | Converts a `.csvz` file into a `.xlsx` file, that can be opened by Excel.                          |
