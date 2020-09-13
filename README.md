@@ -17,7 +17,8 @@ A `csvz` file is literally just a bunch of `csv` files, in a zip file, that has 
   - [`csvz-meta-tables` A csvz file can contain a file called `tables.csv` describing the contents of the file](#csvz-meta-tables-a-csvz-file-can-contain-a-file-called-tablescsv-describing-the-contents-of-the-file)
   - [`csvz-meta-columns` A csvz file can contain a file called `columns.csv`](#csvz-meta-columns-a-csvz-file-can-contain-a-file-called-columnscsv)
   - [`csvz-meta-relations` A csvz file can contain a file called `relationships.csv`](#csvz-meta-relations-a-csvz-file-can-contain-a-file-called-relationshipscsv)
-  - [Unwritten meta fragments](#unwritten-meta-fragments)
+  - [`csvz-meta-csv` A csvz file can contain a file called `csv.csv`](#csvz-meta-csv-A-csvz-file-can-contain-a-file-called-csvcsv)
+  - [Suggested specification fragments](#suggested-specification-fragments)
 - [A list of `csvz-compliant` Tools and Libraries](#a-list-of-csvz-compliant-tools-and-libraries)
 - [Contribute](#contribute)
 - [License](#license)
@@ -40,9 +41,9 @@ A csvz file is compliant with `csvz-0` if it is literally just a bunch of `csv` 
 
 (Note that each fragment has a fragment identifier written at the beginning of the fragment. For example this is `csvz-0` and the next fragment is `csvz-meta-tables`. Fragments are optional, but it is good to know which fragments you do or do not comply with.)
 
-The `csv` files themselves *should* comply with [`RFC 4180`](https://github.com/secretGeek/AwesomeCSV#standards).
+The `csv` files themselves should be parseable with most csv reading software. They may comply with [`RFC 4180`](https://github.com/secretGeek/AwesomeCSV#standards).
 
-(Anywhere that this spec refers to "a csv file" it means a file that complies with `RFC 4180`.) (at the very least... other more specific csv format details will be covered in a later spec fragment).
+(Anywhere that this spec refers to "a csv file" it means a file that complies with `RFC 4180` (todo: find a variant of 4180 that gives a sensible definition with options for text encoding, for delimiters, qualifiers, escaping.).)
 
 (Anywhere that `the csvz specification` refers to "this spec" it means `the csvz specification`.)
 
@@ -65,7 +66,8 @@ The file `tables.csv` meets the following description:
 - There is a header row naming the columns in this file
 - Each data row describes a different csv file within this `csvz` file
 - The columns must include a column called "filename"
-- There may be more columns. Some suggestions (not required for this specification)
+- There may be more columns.
+- Here are some suggestions:
   - `bytes` - the size of the file in bytes
   - `rows` - the number of rows in the file
   - `columns` - the number of columns in the file
@@ -74,11 +76,14 @@ The file `tables.csv` meets the following description:
   - `source` - information about the source of the data in the file
   - `has-column-names` - a `true/false` value indicating if the file has a header row containing column names.
   - `skip-rows` - How many rows need to be skipped, before the data begins? (Rarely need to specify this, but when you need it, you need it!)
-- The file `tables.csv` may also describe itself. See [Russell](http://wiki.secretgeek.net/paradox#bertrand-russell-making-life-impossible-for-frege-since-1902).
+  - (todo: where information in table.csv conflicts with information in `csv.csv`, then `table.csv` has precedence over csv.csv, for the file it describes. For example csv.csv may indicate that all files have header rows, but a specific file may not, and this would be indicated in `tables.csv`)
+- The file `tables.csv` may also describe itself. See [Russell](http://wiki.secretgeek.net/paradox#bertrand-russell-making-life-impossible-for-frege-since-1902). Note that `bytes` (for example) might cause a paradox.
 
 (The word "must" is used for parts of the specification that are required for a file or tool to claim compliance with the standards described in this spec. The word "may" is used for parts which are not required; Optional sections may be covered in more detail, as required elements in a subsequent fragment of this spec.)
 
-(`help-wanted` the method of encoding `true/false` values is not currently defined.)
+(Whenever suggestions are provided, they are not required for conformance with the current spec fragment. These suggestion may be described more fully in later spec fragments, in which they may be required.)
+
+(Expectations around the encoding of `true/false` values, and other fundamental `data-types`, are not currently defined.)
 
 -----
 
@@ -97,10 +102,10 @@ The file `columns.csv` meets the following description:
   - If the columns "filename" and "column" are not unique, then any meta data about that file may not be correctly interpreted. This may cause difficulties
 - There should be more columns than just the "filename" and "column" column. Some suggestions:
   - `data-type` - the type of the column. (Data-types are not described in this spec fragment, and will be covered in later spec fragments.)
-  - `nullable` - a value indicating if the column can be null
+  - `nullable` - a `true/false` value indicating if the column can be null
   - `max-length` - a nullable column, that describes the maximum length of the column, in cases where the data-type supports a maximum length
-  - `unique` - a true/false value indicating if the values in the column should be unique
-  - `primary-key` - a true/false value indicating if the column can serve as (part or whole of) the primary key of the table.
+  - `unique` - a `true/false` value indicating if the values in the column should be unique
+  - `primary-key` - a `true/false` value indicating if the column can serve as (part or whole of) the primary key of the table.
   - `description` - a description of the column
   - `units` - a nullable name description of the unit of measure
   - `ordinal` - the order in which the columns have been written to the file. In cases where there is no header row, or where columns are re-ordered, this can be helpful.
@@ -128,43 +133,37 @@ The file `relationships.csv` meets the following description:
 
 -----
 
-### `csvz-meta-csv` (DRAFT) A csvz file can contain a file called `csv.csv`
+### `csvz-meta-csv` A csvz file can contain a file called `csv.csv`
+
+(todo: this section is still very much a draft)
 
 Metadata about the rules of the csvz file are contained in a directory called "_meta". The file `csv.csv`, if present, is inside this directory.
 
 The file `csv.csv` contains metadata about how the csv files in this `csvz` file are formatted, from a general csv standards point of view.
 
-Later spec fragments will give exact definitions for the expected columns and supported columns, their possible values and the meanings of those values.
+(Later spec fragments will give exact definitions for the expected columns and supported columns, their possible values and the meanings of those values.)
 
 But to comply with `csvz-meta-csv` the file `csv.csv` must:
 
+- Be formatted as [`strict-4180`](https://tools.ietf.org/html/rfc4180)
 - Have a header row naming the columns in this file
 - Data rows, each of which describes a different and very specific but fundamental aspect of the csv format used by all other csv files in this csvz file.
-- TODO: Open question: what format must this csvz file be written in?
-  - e.g. perhaps `csv.csv` should simply eb comma separated, with LF for rows, double-quotes to qualify any content that contains a separator or qualify, and doubling for embedded qualifiers.
-  - Or... more creative... could a "simple" heuristic be used to determine line and row feed?
-    - for example if we know in advance that the first row is:
-
-        ' "aspect" `field-delim` "value" `field-delim` "comments" `row-delim` '
-
-    ....then we can infer those already, for this file at least. And that is enough to go on to define the rest of the aspects. )
-- Suggested aspects that can be described (this spec fragment deliberately contains no specifics as to *how* these things are described):
-  - encoding - what file encoding is used for the csv files (utf-x, BOM, etc.)
-  - field separators - examples comma, tab, semicolon, space, various emoji
-  - row separators - examples CRLF, LF, CR, semicolon, exclamation point, backtick
-  - qualifiers - what qualifiers (if any) are used for embedding delimiters. perhaps qualifiers are not used.
-  - What quoting is used, e.g. single/double/mixed/other?
-  - escaping - Are qualifiers doubled or escaped? (If escaped, escaped with what?)
-  - nulls... how are `nulls` represented? e.g. the literal string `null` with no quotes? or `NULL`, or `nil`? Or are empty strings, unquoted, to be treated as NULLs?
-  - user defined data types are proposed to be handled elsewhere. but possibly some extremely common fundamental data types could be most expediently described in csv.csv, such as:
-    - date formats - hint... iso 8601
-    - time zone information
+- Suggested aspects that can be described (and which should be described in subsequent fragments)
+  - `encoding - what file encoding is used for the csv files (utf-x, BOM, etc.)
+  - `field separator` - examples comma, tab, semicolon, space, various emoji
+  - `row separator` - examples CRLF, LF, CR, semicolon, exclamation point, backtick
+  - `qualifier` - what qualifiers (if any) are used for embedding delimiters. perhaps qualifiers are not used. Can single/double/mixed/other be used?
+  - `escaping` - Are qualifiers doubled or escaped? (If escaped, escaped with what?)
+  - `null-values` - how are `null-values` represented? e.g. the literal string `null` with no quotes? or `NULL`, or `nil`? Or are empty strings, unquoted, to be treated as NULLs?
+  - `has-column-names` - a `true/false` value indicating if every csv file (other than this one) file has a header row containing column names. (Can be over-ridden by a `has-column-names` value in the `tables.csv` file, if present.)
+  - user defined `data-types` can be handled elsewhere, but a limited number of common fundamental `data-types` could be most expediently described in `csv.csv`, such as:
+    - date formats - e.g. ISO 8601
     - boolean formats
     - binary data (hint: base 64 coded)
     - integer ranges.
     - floats
 - todo: Later spec fragments may further describe "sensible defaults" for these things
-- todo: Later spec fragments may describe heuristics for detecting delimiters/qualifiers/quoting and escaping rules, etc.
+- todo: Later spec fragments may describe "sensible heuristics" for detecting delimiters/qualifiers/quoting and escaping rules, etc.
 
 -----
 
@@ -220,7 +219,7 @@ A community forum for discussion/ideas for implementors and tool builders is muc
 
 ## License
 
-[![CC0](http://mirrors.creativecommons.org/presskit/buttons/88x31/svg/cc-zero.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
+[![CC0](cc-zero.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 To the extent possible under law, [Leon Bambrick](http://secretgeek.net) has waived all copyright and related or neighboring rights to this work.
 
